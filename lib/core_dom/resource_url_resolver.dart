@@ -28,8 +28,8 @@ class ResourceUrlResolver {
   static final RegExp urlTemplateSearch = new RegExp('{{.*}}');
   static final RegExp quotes = new RegExp("[\"\']");
 
-  // Ensures that Uri.base is http/https.
-  final _baseUri = Uri.base.origin + ('/');
+  // Reconstruct the Uri without the http or https restriction due to Uri.base.origin 
+  final _baseUri = "${Uri.base.scheme}://${Uri.base.authority}" + ('/');
 
   final TypeToUriMapper _uriMapper;
   final ResourceResolverConfig _config;
@@ -49,9 +49,9 @@ class ResourceUrlResolver {
     if (baseUri == null) {
       return html;
     }
-    Node node = _parseHtmlString(html);
-    _resolveDom(node, baseUri);
-    return node.innerHtml;
+    Element elem = _parseHtmlString(html);
+    _resolveDom(elem, baseUri);
+    return elem.innerHtml;
   }
 
   /**
